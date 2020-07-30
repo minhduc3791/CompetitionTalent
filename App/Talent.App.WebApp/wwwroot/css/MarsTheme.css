@@ -1478,10 +1478,8 @@ div.ReactTags__selected a.ReactTags__remove {
 }
 
 .job-summary-card {
-    min-width: 340px !important;
     min-height: 340px !important;
     max-height: 340px !important;
-    margin: 15px !important;
 }
 
 .extra.content.center {
