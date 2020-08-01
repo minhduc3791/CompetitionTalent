@@ -32,7 +32,7 @@ export default class App extends React.Component {
                         <Route path="/TalentMatching" component={TalentMatching}></Route>
                         <Route path="/AccountSettings" component={AccountSetting} />
                         <Route path="/ManageJobs" component={ManageJob} />
-                        <Route path="/PostJob/:copyId?" component={CreateJob} />
+                        <Route path="/PostJob/:copyId?/:id?" component={CreateJob} />
                         <Route path="/ManageClient" component={ManageClient}/>
                         <Redirect exact from="/" to="/Home"></Redirect>
                         <Route path="/Home" component={HomePage} />

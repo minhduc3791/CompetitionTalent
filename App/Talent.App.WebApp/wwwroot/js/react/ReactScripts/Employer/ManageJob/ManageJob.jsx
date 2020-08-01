@@ -8,6 +8,17 @@ import { BodyWrapper, loaderData } from '../../Layout/BodyWrapper.jsx';
 import { Pagination, Icon, Dropdown, Grid, Header, Card, Divider } from 'semantic-ui-react';
 
 const PAGE_SIZE = 6;
+const SORT_BY_DATE = [
+    {key: 'asc', text: 'Oldest First', value: 'asc'},
+    {key: 'desc', text: 'Newest First', value: 'desc'},
+];
+const FILTERS = [
+    { key: 'showActive', text: 'Show Active', value: 'showActive' },
+    { key: 'showClosed', text: 'Show Closed', value: 'showClosed' },
+    { key: 'showDraft', text: 'Show Draft', value: 'showDraft' },
+    { key: 'showExpired', text: 'Show Expired', value: 'showExpired' },
+    { key: 'showUnexpired', text: 'Show Unexpired', value: 'showUnexpired' },
+];
 
 export default class ManageJob extends React.Component {
     constructor(props) {
@@ -15,7 +26,6 @@ export default class ManageJob extends React.Component {
         let loader = loaderData
         loader.allowedUsers.push("Employer");
         loader.allowedUsers.push("Recruiter");
-        //console.log(loader)
         this.state = {
             loadJobs: [],
             loaderData: loader,
@@ -37,6 +47,9 @@ export default class ManageJob extends React.Component {
         this.init = this.init.bind(this);
         this.loadNewData = this.loadNewData.bind(this);
         this.updateWithoutSave = this.updateWithoutSave.bind(this);
+        this.handlePaginationChange = this.handlePaginationChange.bind(this);
+        this.handleChangeFilter = this.handleChangeFilter.bind(this);
+        this.handleChangeSort = this.handleChangeSort.bind(this);
         //your functions go here
     };
 
@@ -56,6 +69,7 @@ export default class ManageJob extends React.Component {
     };
 
     loadData(callback) {
+        console.log(this.state.activePage);
         let queryString = `activePage=${this.state.activePage}&sortbyDate=${this.state.sortBy.date}&`;
         queryString += Object.keys(this.state.filter)
             .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(this.state.filter[k]))
@@ -63,6 +77,8 @@ export default class ManageJob extends React.Component {
 
         var link = 'http://localhost:51689/listing/listing/getSortedEmployerJobs?';
         var cookies = Cookies.get('talentAuthToken');
+
+        console.log(this.state.filter);
 
         $.ajax({
             url: link + queryString,
@@ -72,11 +88,12 @@ export default class ManageJob extends React.Component {
             },
             type: "GET",
             success: function (res) {
+                console.log(res);
                 this.setState({
                     loadJobs: res.myJobs,
-                    totalPages: res.totalCount / PAGE_SIZE
+                    totalPages: Math.ceil(res.totalCount / PAGE_SIZE)
                 });
-                callback();
+                callback && callback()
             }.bind(this)
         })
        // your ajax call and other logic goes here
@@ -103,6 +120,26 @@ export default class ManageJob extends React.Component {
         });
     }
 
+    handlePaginationChange(e, { activePage }) {
+        this.setState({ activePage }, () => { this.loadData() })
+    }
+
+    handleChangeFilter(e, { value }) {
+        if (value && value.length >= 0) {
+            const filter = TalentUtil.deepCopy(this.state.filter);
+            Object.keys(this.state.filter).forEach(f => filter[f] = false);//reset all filter
+            value.forEach(v => filter[v] = true)
+            this.setState({ filter }, () => { this.loadData() });
+        }
+    }
+
+    handleChangeSort(e, { value }) {
+        console.log(value);
+        const sortBy = TalentUtil.deepCopy(this.state.sortBy);
+        sortBy.date = value;
+        this.setState({ sortBy }, () => { this.loadData() });
+    }
+
     render() {
         const { activePage, totalPages, loadJobs } = this.state;
         return (
@@ -113,26 +150,30 @@ export default class ManageJob extends React.Component {
                         <Grid column={2}>
                             <Icon name="filter" />Filter:
                             <Dropdown
+                                className="dropdown center"
                                 inline
+                                onChange={this.handleChangeFilter}
                                 floating
-                                options={[]}
-                                search
+                                defaultValue={['showActive', 'showDraft', 'showExpired', 'showUnexpired']}
+                                multiple
+                                options={FILTERS}
                                 text='Choose filter'
                             />
                             <Icon name="calendar" />Sort by date:
                             <Dropdown
                                 inline
                                 floating
-                                options={[]}
+                                onChange={this.handleChangeSort}
+                                options={SORT_BY_DATE}
                                 search
-                                text='Newest first'
+                                value={this.state.sortBy.date}
                             />
                         </Grid>
                         {(!loadJobs.length || loadJobs.length === 0) && <Grid><p>No Jobs Found</p></Grid>}
                         <Card.Group className="jobs-list" itemsPerRow={3}>
                             {loadJobs && loadJobs.length > 0 && loadJobs.map(job => (<JobSummaryCard updateWithoutSave={this.updateWithoutSave} key={job.id} {...job} />))}
                         </Card.Group>
-                        <Pagination floated="right" defaultActivePage={activePage} totalPages={totalPages} />
+                        <Pagination floated="right" defaultActivePage={activePage} onPageChange={this.handlePaginationChange} totalPages={totalPages} />
                     </div>
                 </div>
             </BodyWrapper>

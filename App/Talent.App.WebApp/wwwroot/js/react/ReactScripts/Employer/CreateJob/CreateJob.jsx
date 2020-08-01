@@ -65,9 +65,13 @@ export default class CreateJob extends React.Component {
         var param = this.props.match.params.id ? this.props.match.params.id : "";//workaround till we get Redux in to keep the page from breaking
         var copyJobParam = this.props.match.params.copyId ? this.props.match.params.copyId : "";
 
+        param = param === '0' ? '' : param;
+        copyJobParam = copyJobParam === '0' ? '' : copyJobParam;
+
         if (param != "" || copyJobParam != "") {
             var link = param != "" ? 'http://localhost:51689/listing/listing/GetJobByToEdit?id=' + param
                 : 'http://localhost:51689/listing/listing/GetJobForCopy?id=' + copyJobParam;
+
             var cookies = Cookies.get('talentAuthToken');
             $.ajax({
                 url: link,
@@ -79,6 +83,7 @@ export default class CreateJob extends React.Component {
                 contentType: "application/json",
                 dataType: "json",
                 success: function (res) {
+                    console.log(res);
                     if (res.success == true) {
                         res.jobData.jobDetails.startDate = moment(res.jobData.jobDetails.startDate);
                         res.jobData.jobDetails.endDate = res.jobData.jobDetails.endDate ? moment(res.jobData.jobDetails.endDate) : null;

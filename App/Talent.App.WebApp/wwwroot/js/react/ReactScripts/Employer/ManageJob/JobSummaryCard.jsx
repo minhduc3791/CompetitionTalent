@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom'
 import { Popup, Button, Card, Label, Icon } from 'semantic-ui-react';
 import moment from 'moment';
 
@@ -47,8 +48,10 @@ export class JobSummaryCard extends React.Component {
     render() {
         const { title, location, noOfSuggestions, summary, id } = this.props;
         const { isLoading } = this.state;
+        const expiryDate = new Date(this.props.expiryDate);
+        const today = new Date();
         return (
-            <Card as='a' className="job-summary-card">
+            <Card className="job-summary-card">
                 <Card.Content>
                     <Card.Header>{title}</Card.Header>
                     <Label ribbon="right" color="black"><Icon name="user" />{noOfSuggestions}</Label>
@@ -56,19 +59,21 @@ export class JobSummaryCard extends React.Component {
                     <Card.Description className="job-summary">{summary}</Card.Description>
                 </Card.Content>
                 <Card.Content extra className="center">
-                    <Button color='red' size='mini' floated="left">
-                        Expired
-                    </Button>
+                    {(today - expiryDate > 0) &&
+                        <Button color='red' size='mini' floated="left">
+                            Expired
+                        </Button>
+                    }
                     <Button.Group size="mini" floated="right">
                         <Button basic color='blue' disabled={isLoading} onClick={() => this.closeJob(id)}>
                             <Icon name="ban" />
                             Close
                         </Button>
-                        <Button basic color='blue'>
+                        <Button basic color='blue' as={Link} to={`PostJob/0/${id}`}>
                             <Icon name="edit" />
                             Edit
                         </Button>
-                        <Button basic color='blue'>
+                        <Button basic color='blue' as={Link} to={`PostJob/${id}/0`} >
                             <Icon name="copy outline" />
                             Copy
                         </Button>

@@ -1485,4 +1485,8 @@ div.ReactTags__selected a.ReactTags__remove {
 .extra.content.center {
     padding: 0.5em 1em !important;
 }
+
+.dropdown.center {
+    margin-top: -8px;
+}
 /*Manage jobs - End*/
