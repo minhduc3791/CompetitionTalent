@@ -12,7 +12,9 @@ export class Address extends React.Component {
 
    
     render() {
-       
+        return (
+            <h1>Address here</h1>
+        )
     }
 
 }
@@ -25,7 +27,8 @@ export class Nationality extends React.Component {
 
     
     render() {
-
-        
+        return (
+            <h1>Nationality here</h1>
+        )
     }
 }

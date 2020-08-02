@@ -11,7 +11,9 @@ export default class CVUpload extends React.Component {
     }
 
     render() {
-
+        return (
+            <h1>CV upload here</h1>
+        )
     }
    
 }

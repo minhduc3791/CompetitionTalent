@@ -32,7 +32,7 @@ namespace Talent.Common.Services
 
             var hostUrl = config["hosturl"];
             if (string.IsNullOrEmpty(hostUrl))
-                hostUrl = "http://0.0.0.0:60880";
+                hostUrl = "http://0.0.0.0:8080";
 
             var webHostBuilder = WebHost.CreateDefaultBuilder(args)
                             .UseConfiguration(config)

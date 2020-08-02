@@ -56,7 +56,7 @@ export default class ManageJob extends React.Component {
     init() {
         let loaderData = TalentUtil.deepCopy(this.state.loaderData)
         loaderData.isLoading = false;
-        this.setState({ loaderData });//comment this
+        //this.setState({ loaderData });//comment this
 
         //set loaderData.isLoading to false after getting data
         this.loadData(() =>
@@ -75,7 +75,7 @@ export default class ManageJob extends React.Component {
             .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(this.state.filter[k]))
             .join('&');
 
-        var link = 'http://localhost:51689/listing/listing/getSortedEmployerJobs?';
+        var link = 'http://talenttservice.azurewebsites.net/listing/listing/getSortedEmployerJobs?';
         var cookies = Cookies.get('talentAuthToken');
 
         console.log(this.state.filter);

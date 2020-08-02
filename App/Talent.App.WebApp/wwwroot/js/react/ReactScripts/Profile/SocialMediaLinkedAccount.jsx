@@ -18,7 +18,9 @@ export default class SocialMediaLinkedAccount extends React.Component {
 
 
     render() {
-
+        return (
+            <h1>social media here</h1>
+        )
     }
 
 }

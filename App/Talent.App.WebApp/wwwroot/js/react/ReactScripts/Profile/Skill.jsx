@@ -5,12 +5,14 @@ import Cookies from 'js-cookie';
 export default class Skill extends React.Component {
     constructor(props) {
         super(props);
-      
+
     };
 
-  
-   render() {
-        
+
+    render() {
+        return (
+            <h1>Skill here</h1>
+        )
     }
 }
 

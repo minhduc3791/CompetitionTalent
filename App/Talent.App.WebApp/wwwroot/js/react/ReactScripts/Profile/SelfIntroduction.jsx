@@ -8,12 +8,10 @@ export default class SelfIntroduction extends React.Component {
     
     };
 
-    
-
-
-
     render() {
-       
+        return (
+            <h1>self introduction here</h1>
+        )
     }
 }
 
