@@ -209,4 +209,16 @@ export default class CreateJob extends React.Component {
             </BodyWrapper>
         )
     }
+
+    renderEdit() {
+        return (
+            <h1>Editting</h1>
+        )
+    }
+
+    renderDisplay() {
+        return (
+            <h1>Displaying</h1>
+        )
+    }
 }
